@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/whosonfirst/go-whosonfirst-iterate/emitter"
 	"github.com/whosonfirst/go-whosonfirst-iterate/filters"
-	"github.com/whosonfirst/go-whosonfirst-iterate/ioutil"
+	"github.com/whosonfirst/go-ioutil"
 	"github.com/whosonfirst/go-whosonfirst-sqlite/database"
 	"github.com/whosonfirst/go-whosonfirst-sqlite/utils"
 	"net/url"

@@ -56,6 +56,8 @@ github.com/tidwall/match v1.0.1 h1:PnKP62LPNxHKTwvHHZZzdOAOCtsJTjo6dZLCwpKm5xc=
 github.com/tidwall/match v1.0.1/go.mod h1:LujAq0jyVjBy028G1WhWfIzbpQfMO8bBZ6Tyb0+pL9E=
 github.com/tidwall/pretty v1.0.0 h1:HsD+QiTn7sK6flMKIvNmpqz1qrpP3Ps6jOKIKMooyg4=
 github.com/tidwall/pretty v1.0.0/go.mod h1:XNkn88O1ChpSDQmQeStsy+sBenx6DDtFZJxhVysOjyk=
+github.com/whosonfirst/go-ioutil v0.0.1 h1:cCrEYen6NDvHfjzV2q4u/VB21u2kTOwDnUGRlMI8Z9o=
+github.com/whosonfirst/go-ioutil v0.0.1/go.mod h1:2dS1vWdAIkiHDvDF8fYyjv6k2NISmwaIjJJeEDBEdvg=
 github.com/whosonfirst/go-spatialite v0.0.0-20180220171945-cb1d9ed624a8/go.mod h1:JnzadIex2v6ZyX6pLrjJ5CJ69e/ljYBCqxarHDMkMJ4=
 github.com/whosonfirst/go-spatialite v0.1.0 h1:jKbVmIeUSsDfPX4DWTeiSR9zGJFETIF1A3YdK6IShBY=
 github.com/whosonfirst/go-spatialite v0.1.0/go.mod h1:w1O/DKimk4wiV+5d2BzWYnxvbdhMhkeU01cpfIeEorQ=
@@ -90,6 +92,8 @@ github.com/whosonfirst/go-whosonfirst-index/v2 v2.0.0 h1:PnPLYvCnBrg7Vvw3ho8tc2l
 github.com/whosonfirst/go-whosonfirst-index/v2 v2.0.0/go.mod h1:BiIcEdIv7W6CZd/sc9m2npVo/rXCVUvWL7dldUb4bu8=
 github.com/whosonfirst/go-whosonfirst-iterate v1.0.0 h1:ioIfP81ovXs1wr2vyickbG9o8DUahmcmJyP9Ih1DAOQ=
 github.com/whosonfirst/go-whosonfirst-iterate v1.0.0/go.mod h1:nxCcHykhwN5E5ropkHetMsi1Gi/Mh2gooK93i02nXsI=
+github.com/whosonfirst/go-whosonfirst-iterate v1.0.1 h1:XTQ6cvfEnNLS5sgx7WLKR9YwkSCuZRh4p6+EqxYjQAU=
+github.com/whosonfirst/go-whosonfirst-iterate v1.0.1/go.mod h1:ceLMHQ9s3naZLFcKeUvokP0Sw7/BmwuZJiaQt/mVO0I=
 github.com/whosonfirst/go-whosonfirst-log v0.1.0 h1:mWYI5hn16uyeLxBmPsLSvYV4rQKK/cxGVhM+bC2ZoGc=
 github.com/whosonfirst/go-whosonfirst-log v0.1.0/go.mod h1:pmgBbxZSnjGVy2nsUJBBMcFagxwIKLlmRsW7ClkXmac=
 github.com/whosonfirst/go-whosonfirst-placetypes v0.1.0/go.mod h1:Jdmug2QQLbrmg+UcYGz8k575GnrOEg63vZVS46e5fMs=

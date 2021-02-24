@@ -10,6 +10,9 @@ github.com/tidwall/gjson
 github.com/tidwall/match
 # github.com/tidwall/pretty v1.0.0
 github.com/tidwall/pretty
+# github.com/whosonfirst/go-ioutil v0.0.1
+## explicit
+github.com/whosonfirst/go-ioutil
 # github.com/whosonfirst/go-spatialite v0.1.1
 github.com/whosonfirst/go-spatialite
 # github.com/whosonfirst/go-whosonfirst-crawl v0.2.1
@@ -17,11 +20,10 @@ github.com/whosonfirst/go-whosonfirst-crawl
 # github.com/whosonfirst/go-whosonfirst-flags v0.2.0
 github.com/whosonfirst/go-whosonfirst-flags
 github.com/whosonfirst/go-whosonfirst-flags/existential
-# github.com/whosonfirst/go-whosonfirst-iterate v1.0.0
+# github.com/whosonfirst/go-whosonfirst-iterate v1.0.1
 ## explicit
 github.com/whosonfirst/go-whosonfirst-iterate/emitter
 github.com/whosonfirst/go-whosonfirst-iterate/filters
-github.com/whosonfirst/go-whosonfirst-iterate/ioutil
 github.com/whosonfirst/go-whosonfirst-iterate/iterator
 github.com/whosonfirst/go-whosonfirst-iterate/publisher
 # github.com/whosonfirst/go-whosonfirst-sqlite v0.1.7
