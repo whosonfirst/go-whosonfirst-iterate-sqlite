@@ -3,11 +3,11 @@ package sqlite
 import (
 	"context"
 	"errors"
-	"github.com/whosonfirst/go-whosonfirst-iterate/emitter"
-	"github.com/whosonfirst/go-whosonfirst-iterate/filters"
+	"github.com/aaronland/go-sqlite"
+	"github.com/aaronland/go-sqlite/database"
 	"github.com/whosonfirst/go-ioutil"
-	"github.com/whosonfirst/go-whosonfirst-sqlite/database"
-	"github.com/whosonfirst/go-whosonfirst-sqlite/utils"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/filters"
 	"net/url"
 	"runtime"
 	"strconv"
@@ -70,7 +70,7 @@ func NewSQLiteEmitter(ctx context.Context, uri string) (emitter.Emitter, error) 
 
 func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterCallbackFunc, uri string) error {
 
-	db, err := database.NewDB(uri)
+	db, err := database.NewDB(ctx, uri)
 
 	if err != nil {
 		return err
@@ -84,7 +84,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 		return err
 	}
 
-	has_table, err := utils.HasTable(db, "geojson")
+	has_table, err := sqlite.HasTable(ctx, db, "geojson")
 
 	if err != nil {
 		return err
@@ -172,8 +172,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 				}
 			}
 
-			ctx = emitter.AssignPathContext(ctx, emitter.STDIN)
-			err = emitter_cb(ctx, fh)
+			err = emitter_cb(ctx, emitter.STDIN, fh)
 
 			if err != nil {
 				error_ch <- err

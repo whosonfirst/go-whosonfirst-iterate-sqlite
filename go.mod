@@ -1,9 +1,9 @@
-module github.com/whosonfirst/go-whosonfirst-iterate-sqlite
+module github.com/whosonfirst/go-whosonfirst-iterate-sqlite/v2
 
 go 1.16
 
 require (
-	github.com/whosonfirst/go-ioutil v0.0.1
-	github.com/whosonfirst/go-whosonfirst-iterate v1.0.1
-	github.com/whosonfirst/go-whosonfirst-sqlite v0.1.7
+	github.com/aaronland/go-sqlite v0.0.4
+	github.com/whosonfirst/go-ioutil v1.0.0
+	github.com/whosonfirst/go-whosonfirst-iterate/v2 v2.0.0
 )

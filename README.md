@@ -48,4 +48,4 @@ $> ./bin/emit \
 ## See also
 
 * https://github.com/whosonfirst/go-whosonfirst-iterate
-* https://github.com/whosonfirst/go-whosonfirst-sqlite
+* https://github.com/aaronland/go-sqlite
