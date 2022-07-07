@@ -2,7 +2,7 @@ package sqlite
 
 import (
 	"context"
-	"errors"
+	"fmt"
 	"github.com/aaronland/go-sqlite"
 	"github.com/aaronland/go-sqlite/database"
 	"github.com/whosonfirst/go-ioutil"
@@ -19,18 +19,31 @@ func init() {
 	emitter.RegisterEmitter(ctx, "sqlite", NewSQLiteEmitter)
 }
 
+// SQLiteEmitter implements the `Emitter` interface for crawling records in a SQLite database (specifically a SQLite database with a 'geojson' table produced by `whosonfirst/go-whosonfirst-sqlite-features` and `whosonfirst/go-whosonfirst-sqlite-features-index`).
 type SQLiteEmitter struct {
 	emitter.Emitter
-	filters  filters.Filters
+	// filters is a `whosonfirst/go-whosonfirst-iterate/v32/filters.Filters` instance used to include or exclude specific records from being crawled.
+	filters filters.Filters
+	// throttle is a channel used to control the maximum number of database rows that will be processed simultaneously.
 	throttle chan bool
 }
 
+// NewGitEmitter() returns a new `GitEmitter` instance configured by 'uri' in the form of:
+//
+//	sqlite://?{PARAMETERS}
+//
+// {PARAMETERS} may be:
+// * `?include=` Zero or more `aaronland/go-json-query` query strings containing rules that must match for a document to be considered for further processing.
+// * `?exclude=` Zero or more `aaronland/go-json-query`	query strings containing rules that if matched will prevent a document from being considered for further processing.
+// * `?include_mode=` A valid `aaronland/go-json-query` query mode string for testing inclusion rules.
+// * `?exclude_mode=` A valid `aaronland/go-json-query` query mode string for testing exclusion rules.
+// * `?processes=` An optional number assigning the maximum number of database rows that will be processed simultaneously. (Default is defined by `runtime.NumCPU()`.)
 func NewSQLiteEmitter(ctx context.Context, uri string) (emitter.Emitter, error) {
 
 	u, err := url.Parse(uri)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse URI, %w", err)
 	}
 
 	q := u.Query()
@@ -42,7 +55,7 @@ func NewSQLiteEmitter(ctx context.Context, uri string) (emitter.Emitter, error) 
 		procs, err := strconv.ParseInt(q.Get("processes"), 10, 64)
 
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse 'processes' parameter, %w", err)
 		}
 
 		max_procs = int(procs)
@@ -57,7 +70,7 @@ func NewSQLiteEmitter(ctx context.Context, uri string) (emitter.Emitter, error) 
 	f, err := filters.NewQueryFiltersFromQuery(ctx, q)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to create query filters, %w", err)
 	}
 
 	em := &SQLiteEmitter{
@@ -68,12 +81,14 @@ func NewSQLiteEmitter(ctx context.Context, uri string) (emitter.Emitter, error) 
 	return em, nil
 }
 
+// WalkURI() walks (crawls) the SQLite database identified by 'uri' and for each file (not excluded by any filters specified
+// when `idx` was created) invokes 'index_cb'.
 func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterCallbackFunc, uri string) error {
 
 	db, err := database.NewDB(ctx, uri)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to create new database for '%s', %w", uri, err)
 	}
 
 	defer db.Close()
@@ -81,23 +96,23 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 	conn, err := db.Conn()
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to connect to database '%s', %w", uri, err)
 	}
 
 	has_table, err := sqlite.HasTable(ctx, db, "geojson")
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to determine whether '%s' has 'geojson' table, %w", uri, err)
 	}
 
 	if !has_table {
-		return errors.New("database is missing a geojson table")
+		return fmt.Errorf("Database '%s' is missing a 'geojson' table", uri)
 	}
 
 	rows, err := conn.Query("SELECT id, body FROM geojson")
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Failed to query 'geojson' table with '%s', %w", uri, err)
 	}
 
 	// https://github.com/whosonfirst/go-whosonfirst-index/issues/5
@@ -117,7 +132,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 		err := rows.Scan(&wofid, &body)
 
 		if err != nil {
-			return err
+			return fmt.Errorf("Failed to scan row with '%s', %w", uri, err)
 		}
 
 		go func(ctx context.Context, wofid int64, body string) {
@@ -146,7 +161,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 			fh, err := ioutil.NewReadSeekCloser(sr)
 
 			if err != nil {
-				error_ch <- err
+				error_ch <- fmt.Errorf("Failed to create ReadSeekCloser for record '%d' with '%s', %w", wofid, uri, err)
 				return
 			}
 
@@ -155,7 +170,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 				ok, err := d.filters.Apply(ctx, fh)
 
 				if err != nil {
-					error_ch <- err
+					error_ch <- fmt.Errorf("Failed to apply query filters to record '%d' with '%s', %w", wofid, uri, err)
 					return
 				}
 
@@ -166,7 +181,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 				_, err = fh.Seek(0, 0)
 
 				if err != nil {
-					error_ch <- err
+					error_ch <- fmt.Errorf("Failed to reset filehandle for record '%d' with '%s', %w", wofid, uri, err)
 					return
 
 				}
@@ -175,7 +190,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 			err = emitter_cb(ctx, emitter.STDIN, fh)
 
 			if err != nil {
-				error_ch <- err
+				error_ch <- fmt.Errorf("Indexing callback failed for record '%d' with '%s', %w", wofid, uri, err)
 			}
 
 		}(sqlite_ctx, wofid, body)
@@ -192,7 +207,7 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 	err = rows.Err()
 
 	if err != nil {
-		return err
+		return fmt.Errorf("Database reported an error scanning rows with '%s', %w", uri, err)
 	}
 
 	return nil
