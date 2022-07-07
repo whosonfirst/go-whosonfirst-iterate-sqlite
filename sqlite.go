@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 )
 
 func init() {
@@ -122,6 +123,8 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 
 	error_ch := make(chan error)
 
+	wg := new(sync.WaitGroup)
+
 	for rows.Next() {
 
 		<-d.throttle
@@ -135,10 +138,13 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 			return fmt.Errorf("Failed to scan row with '%s', %w", uri, err)
 		}
 
+		wg.Add(1)
+
 		go func(ctx context.Context, wofid int64, body string) {
 
 			defer func() {
 				d.throttle <- true
+				wg.Done()
 			}()
 
 			select {
@@ -203,6 +209,8 @@ func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterC
 			// pass
 		}
 	}
+
+	wg.Wait()
 
 	err = rows.Err()
 
