@@ -2,14 +2,40 @@
 
 Go package implementing go-whosonfirst-iterate/emitter functionality for (Who's On First specific) SQLite databases.
 
-## Important
+## Documentation
 
-Documentation for this package is incomplete and will be updated shortly.
+[![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-whosonfirst-iterate-sqlite.svg)](https://pkg.go.dev/github.com/whosonfirst/go-whosonfirst-iterate-sqlite)
+
+## Example
+
+```
+import (
+       "context"
+       "fmt"
+       "github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
+       _ "github.com/whosonfirst/go-whosonfirst-iterate-sqlite/v2"	
+       "io"
+)
+
+func main() {
+
+	ctx := context.Background()
+     
+	iter_cb := func(ctx context.Context, path string, r io.ReadSeeker, args ...interface{}) error {
+		fmt.Println(path)
+		return nil
+	}
+
+	iter, _ := iterator.NewIterator(ctx, "sqlite://", iter_cb)
+
+	iter.IterateURIs(ctx, "whosonfirst.db")
+}	
+```
 
 ## Tools
 
 ```
-> make cli
+$> make cli
 go build -mod vendor -o bin/count cmd/count/main.go
 go build -mod vendor -o bin/emit cmd/emit/main.go
 ```
