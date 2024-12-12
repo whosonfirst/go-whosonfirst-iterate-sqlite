@@ -4,13 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	_ "github.com/whosonfirst/go-whosonfirst-iterate-sqlite/v2"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/publisher"
 	"io"
 	"log"
 	"os"
 	"strings"
+
+	_ "github.com/whosonfirst/go-whosonfirst-iterate-sqlite/v2"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/publisher"
 )
 
 func main() {

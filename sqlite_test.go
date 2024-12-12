@@ -2,11 +2,12 @@ package sqlite
 
 import (
 	"context"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 	"io"
 	"path/filepath"
 	"sync/atomic"
 	"testing"
+
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/iterator"
 )
 
 func TestSQLiteEmitter(t *testing.T) {

@@ -3,16 +3,17 @@ package sqlite
 import (
 	"context"
 	"fmt"
-	"github.com/aaronland/go-sqlite"
-	"github.com/aaronland/go-sqlite/database"
-	"github.com/whosonfirst/go-ioutil"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter"
-	"github.com/whosonfirst/go-whosonfirst-iterate/v2/filters"
 	"net/url"
 	"runtime"
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/aaronland/go-sqlite/v2"
+	_ "github.com/aaronland/go-sqlite/v2/database"
+	"github.com/whosonfirst/go-ioutil"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/emitter"
+	"github.com/whosonfirst/go-whosonfirst-iterate/v2/filters"
 )
 
 func init() {
@@ -86,15 +87,15 @@ func NewSQLiteEmitter(ctx context.Context, uri string) (emitter.Emitter, error) 
 // when `idx` was created) invokes 'index_cb'.
 func (d *SQLiteEmitter) WalkURI(ctx context.Context, emitter_cb emitter.EmitterCallbackFunc, uri string) error {
 
-	db, err := database.NewDB(ctx, uri)
+	db, err := sqlite.NewDatabase(ctx, uri)
 
 	if err != nil {
 		return fmt.Errorf("Failed to create new database for '%s', %w", uri, err)
 	}
 
-	defer db.Close()
+	defer db.Close(ctx)
 
-	conn, err := db.Conn()
+	conn, err := db.Conn(ctx)
 
 	if err != nil {
 		return fmt.Errorf("Failed to connect to database '%s', %w", uri, err)
