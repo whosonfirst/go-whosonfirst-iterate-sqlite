@@ -2,6 +2,10 @@
 
 Go package implementing go-whosonfirst-iterate/emitter functionality for (Who's On First specific) SQLite databases.
 
+## Important
+
+This package has been deprecated and replaced by [whosonfirst/go-whosonfirst-database-sql](https://github.com/whosonfirst/go-whosonfirst-iterate-sql).
+
 ## Documentation
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/whosonfirst/go-whosonfirst-iterate-sqlite.svg)](https://pkg.go.dev/github.com/whosonfirst/go-whosonfirst-iterate-sqlite)
